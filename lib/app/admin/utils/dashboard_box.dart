@@ -17,7 +17,7 @@ class DashboardBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(widget);
+        Get.to(() => widget);
       },
       child: Container(
         decoration: BoxDecoration(

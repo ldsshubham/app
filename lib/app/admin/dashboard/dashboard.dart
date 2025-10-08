@@ -1,3 +1,4 @@
+import 'package:app/app/admin/banner/admin_banners.dart';
 import 'package:app/app/admin/orders/admin_orders.dart';
 import 'package:app/app/admin/products/admin_products.dart';
 import 'package:app/app/admin/utils/dashboard_box.dart';
@@ -45,6 +46,11 @@ class AdminDashboard extends StatelessWidget {
                 title: "Revenue",
                 value: "₹50,000",
                 widget: AdminDashboard(),
+              ),
+              DashboardBox(
+                title: "Banners",
+                value: "10",
+                widget: AdminBanners(),
               ),
             ],
           ),
