@@ -105,7 +105,11 @@ class AdminLogin extends StatelessWidget {
                       }
                     }
                   },
-                  child: Text('Login'),
+                  child: Obx(() {
+                    return loginController.isLoading.value
+                        ? Text('Loading....')
+                        : Text("Login");
+                  }),
                 ),
               ),
               SizedBox(height: 8),

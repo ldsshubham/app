@@ -1,6 +1,5 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:toastification/toastification.dart';
 
 class AdminOrderDetails extends StatelessWidget {

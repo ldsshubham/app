@@ -7,6 +7,7 @@ class AdminLoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final isPasswordHidden = true.obs;
+  final isLoading = false.obs;
 
   // Create user with email and password
   Future<bool> createAdmin() async {
@@ -51,6 +52,7 @@ class AdminLoginController extends GetxController {
   //  Login user with email & password
   Future<bool> loginAdmin() async {
     try {
+      isLoading.value = true;
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
             email: emailController.text.trim(),
@@ -133,6 +135,8 @@ class AdminLoginController extends GetxController {
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 }

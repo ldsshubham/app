@@ -83,19 +83,37 @@ class AddBanner extends StatelessWidget {
             /// Upload button
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: controller.uploadBanner,
-                icon: const Icon(Icons.cloud_upload),
-                label: const Text('Upload Banner'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              child: Obx(
+                () => ElevatedButton.icon(
+                  onPressed: controller.isLoading.value
+                      ? null // disable button while uploading
+                      : controller.uploadBanner,
+                  icon: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Icon(Icons.cloud_upload),
+                  label: Text(
+                    controller.isLoading.value ? "Uploading..." : "Upload",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ),
             ),
+            SizedBox(height: 4),
+            Text("Uploaded Banner"),
           ],
         ),
       ),

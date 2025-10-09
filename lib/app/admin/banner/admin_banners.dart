@@ -6,19 +6,20 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AdminBanners extends StatelessWidget {
-  const AdminBanners({super.key});
-
+  AdminBanners({super.key});
+  final BannerController controller = Get.put(BannerController());
   @override
   Widget build(BuildContext context) {
-    final BannerController controller = Get.put(BannerController());
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(title: const Text('Banners'), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Obx(() {
-            return controller.banners.isEmpty
+            if (controller.isLoading.value) {
+              return Center(child: Text('Loading....'));
+            }
+            return controller.uploadBanners.isEmpty
                 ? const Center(
                     child: Text(
                       "No banners found",
@@ -26,7 +27,7 @@ class AdminBanners extends StatelessWidget {
                     ),
                   )
                 : GridView.builder(
-                    itemCount: controller.banners.length,
+                    itemCount: controller.uploadBanners.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -35,7 +36,7 @@ class AdminBanners extends StatelessWidget {
                           childAspectRatio: 1.5,
                         ),
                     itemBuilder: (context, index) {
-                      final banner = controller.banners[index];
+                      final banner = controller.uploadBanners[index];
                       return Stack(
                         children: [
                           Container(
@@ -43,7 +44,7 @@ class AdminBanners extends StatelessWidget {
                               color: AppColors.gray,
                               borderRadius: BorderRadius.circular(12),
                               image: DecorationImage(
-                                image: NetworkImage(banner),
+                                image: NetworkImage(banner.url),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -57,7 +58,7 @@ class AdminBanners extends StatelessWidget {
                                 color: Colors.redAccent,
                               ),
                               onPressed: () {
-                                controller.banners.removeAt(index);
+                                controller.deleteBanner(banner.id);
                               },
                             ),
                           ),
