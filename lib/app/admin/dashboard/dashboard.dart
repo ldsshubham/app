@@ -32,16 +32,20 @@ class AdminDashboard extends StatelessWidget {
             crossAxisSpacing: 16,
             childAspectRatio: 1.2,
             children: [
-              DashboardBox(
-                title: "Total Products",
-                value: "${_dashboardController.totalProducts}",
-                widget: AdminProductsListPage(),
-              ),
-              DashboardBox(
-                title: "Total Orders",
-                value: "${_dashboardController.totalOrders}",
-                widget: AdminOrders(),
-              ),
+              Obx(() {
+                return DashboardBox(
+                  title: "Total Products",
+                  value: "${_dashboardController.totalProducts}",
+                  widget: AdminProductsListPage(),
+                );
+              }),
+              Obx(() {
+                return DashboardBox(
+                  title: "Total Orders",
+                  value: "${_dashboardController.totalOrders}",
+                  widget: AdminOrders(),
+                );
+              }),
               DashboardBox(
                 title: "Vendors",
                 value: "35",

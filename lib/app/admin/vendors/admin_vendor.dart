@@ -1,5 +1,6 @@
 import 'package:app/app/admin/auth/admin_login.dart';
 import 'package:app/app/admin/utils/vendor_card.dart';
+import 'package:app/app/admin/vendors/admin_add_vendor.dart';
 import 'package:app/app/admin/vendors/admin_vendor_details.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class AdminVendor extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () {
-              Get.to(() => AdminLogin());
+              Get.to(() => BusinessRegistrationScreen());
               // toastification.show(
               //   context: context,
               //   type: ToastificationType.success,

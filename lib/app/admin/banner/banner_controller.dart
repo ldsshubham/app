@@ -37,7 +37,7 @@ class BannerController extends GetxController {
     }
   }
 
-  Future<void> uploadBanner() async {
+  Future<String> uploadBanner() async {
     if (selectedImage.value == null) {
       Get.snackbar(
         'Error',
@@ -45,7 +45,7 @@ class BannerController extends GetxController {
         colorText: AppColors.white,
         backgroundColor: AppColors.error,
       );
-      return;
+      return Null as String;
     }
 
     try {
@@ -67,10 +67,13 @@ class BannerController extends GetxController {
         backgroundColor: AppColors.green,
         colorText: AppColors.white,
       );
+
       selectedImage.value = null;
       titleController.value = '';
+      return bannerDownloadUrl;
     } catch (e) {
       Get.snackbar('Error', e.toString());
+      return Null as String;
     } finally {
       isLoading.value = false;
     }
@@ -107,6 +110,7 @@ class BannerController extends GetxController {
         colorText: AppColors.white,
       );
       print('Delete error: $e');
+      return;
     }
   }
 }

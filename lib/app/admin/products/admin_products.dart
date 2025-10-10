@@ -1,5 +1,6 @@
 import 'package:app/app/admin/products/admin_add_products.dart';
 import 'package:app/app/admin/products/admin_product_details.dart';
+import 'package:app/app/admin/products/admin_products_controller.dart';
 import 'package:app/app/admin/utils/product_card.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:toastification/toastification.dart';
 
 class AdminProductsListPage extends StatelessWidget {
-  const AdminProductsListPage({super.key});
+  AdminProductsListPage({super.key});
+  final AdminProductsController controller = Get.put(AdminProductsController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,37 +20,45 @@ class AdminProductsListPage extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
 
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 230,
-            ),
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return ProductCard(
-                imageUrl:
-                    'https://www.venkateshwaragroup.in/vgiblog/wp-content/uploads/2023/04/Scope-for-Agriculture.jpg',
-                title: "Product",
-                category: "cat",
-                price: '10',
-                onTap: () {
-                  Get.to(() => AdminProductDetails());
-                },
-                onDelete: () {
-                  toastification.show(
-                    context: context,
-                    type: ToastificationType.success,
-                    autoCloseDuration: Duration(seconds: 1),
-                    title: Text('Product Delete'),
-                    style: ToastificationStyle.minimal,
-                    icon: Icon(Icons.check),
-                  );
-                },
-              );
-            },
-          ),
+          child: Obx(() {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 230,
+              ),
+              itemCount: controller.products.length,
+              itemBuilder: (context, index) {
+                final product = controller.products[index];
+                return ProductCard(
+                  imageUrl:
+                      product['productImageUrl'] ??
+                      "https://i0.wp.com/kudos.fastcompany.com/wp-content/uploads/2025/04/placeholder.png?ssl=1",
+                  title: product['productName'] ?? "Product Name",
+                  category: product['productCategory'] ?? "Category",
+                  price: "${product['productPrice']}",
+                  onTap: () {
+                    Get.to(() => AdminProductDetails(id: product['productId']));
+                  },
+                  onDelete: () {
+                    controller.deleteProduct(
+                      product['id'],
+                      product['productImageUrl'] ?? '',
+                    );
+                    toastification.show(
+                      context: context,
+                      type: ToastificationType.success,
+                      autoCloseDuration: Duration(seconds: 1),
+                      title: Text('Product Delete'),
+                      style: ToastificationStyle.minimal,
+                      icon: Icon(Icons.check),
+                    );
+                  },
+                );
+              },
+            );
+          }),
         ),
         floatingActionButton: Container(
           padding: EdgeInsets.all(4),
