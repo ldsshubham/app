@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BusinessRegistrationController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final TextEditingController vendorName = TextEditingController();
   final TextEditingController businessName = TextEditingController();
   final TextEditingController address = TextEditingController();
@@ -15,9 +15,9 @@ class BusinessRegistrationController extends GetxController {
   final TextEditingController pincode = TextEditingController();
   final TextEditingController mobile1 = TextEditingController();
   final TextEditingController mobile2 = TextEditingController();
-
   final RxString selectedPlan = "Free".obs;
   final Rx<File?> selectedBanner = Rx<File?>(null);
+  final Rx<File?> selectedProfile = Rx<File?>(null);
   final RxBool isLoading = false.obs;
   final ImagePicker picker = ImagePicker();
 
@@ -28,19 +28,23 @@ class BusinessRegistrationController extends GetxController {
     }
   }
 
-  Future<void> uploadBannerImage() async {
-    if (selectedBanner.value == null) {
-      Get.snackbar('Error', 'Please select a banner image');
-      return;
+  Future<void> pickProfileImg() async {
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedProfile.value = File(image.path);
     }
-    try {
-      isLoading.value = true;
+  }
 
-      Get.snackbar("Success", "Banner image selected successfully");
+  Future<String> uploadPicture(File file, {required String type}) async {
+    try {
+      final storage = FirebaseStorage.instance;
+      final folder = type.toLowerCase() == "banner" ? "banners" : "profiles";
+      final filename = "${folder}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final fileRef = storage.ref().child("$folder/$filename");
+      final uploadTask = await fileRef.putFile(file);
+      return '';
     } catch (e) {
-      Get.snackbar("Error", "Failed to upload banner image: $e");
-    } finally {
-      isLoading.value = false;
+      return '';
     }
   }
 
@@ -50,6 +54,17 @@ class BusinessRegistrationController extends GetxController {
         return 1;
       case "Max":
         return 2;
+      default:
+        return 0;
+    }
+  }
+
+  int get planSubs {
+    switch (selectedPlan.value) {
+      case "Premium":
+        return 199;
+      case "Max":
+        return 299;
       default:
         return 0;
     }
@@ -94,9 +109,7 @@ class BusinessRegistrationController extends GetxController {
       }
 
       await _firestore.collection("businesses").add(businessData);
-
       Get.snackbar("Success", "Business registered successfully");
-
       vendorName.clear();
       businessName.clear();
       address.clear();

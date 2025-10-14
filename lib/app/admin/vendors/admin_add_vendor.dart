@@ -135,7 +135,15 @@ class BusinessRegistrationScreen extends StatelessWidget {
                         )
                       : const SizedBox(),
                 ),
-
+                SizedBox(height: 8),
+                Obx(() {
+                  return controller.selectedPlan.value == "Max"
+                      ? OutlinedButton(
+                          onPressed: () {},
+                          child: Text('Upload Banner'),
+                        )
+                      : SizedBox();
+                }),
                 const SizedBox(height: 24),
 
                 Obx(
