@@ -6,7 +6,6 @@ import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:toastification/toastification.dart';
 
 class AdminVendor extends StatelessWidget {
   const AdminVendor({super.key});
@@ -50,13 +49,6 @@ class AdminVendor extends StatelessWidget {
           child: IconButton(
             onPressed: () {
               Get.to(() => BusinessRegistrationScreen());
-              // toastification.show(
-              //   context: context,
-              //   type: ToastificationType.success,
-              //   style: ToastificationStyle.minimal,
-              //   title: Text('Add Vendor'),
-              //   autoCloseDuration: Duration(seconds: 1),
-              // );
             },
             icon: Icon(Iconsax.add, color: AppColors.white, size: 32),
           ),

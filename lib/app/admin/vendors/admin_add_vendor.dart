@@ -2,6 +2,7 @@ import 'package:app/app/admin/vendors/admin_vendor_controller.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 
 class BusinessRegistrationScreen extends StatelessWidget {
   final BusinessRegistrationController controller = Get.put(
@@ -22,6 +23,45 @@ class BusinessRegistrationScreen extends StatelessWidget {
             key: _formKey,
             child: Column(
               children: [
+                Obx(() {
+                  return InkWell(
+                    onTap: controller.pickProfileImg,
+                    child: Container(
+                      height: 180,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: controller.selectedProfile.value != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.file(
+                                controller.selectedProfile.value!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                            )
+                          : const Center(
+                              child: Text("Tap to upload profile image"),
+                            ),
+                    ),
+                  );
+                }),
+                SizedBox(height: 8),
+                OutlinedButton(
+                  onPressed: () {
+                    controller.uploadPicture(
+                      controller.selectedProfile.value!,
+                      type: "profile",
+                    );
+                  },
+                  child: Text('Upload Profile Picture'),
+                ),
+                SizedBox(height: 8),
                 TextFormField(
                   controller: controller.vendorName,
                   decoration: const InputDecoration(labelText: "Vendor Name"),
@@ -139,7 +179,12 @@ class BusinessRegistrationScreen extends StatelessWidget {
                 Obx(() {
                   return controller.selectedPlan.value == "Max"
                       ? OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.uploadPicture(
+                              controller.selectedBanner.value!,
+                              type: "banner",
+                            );
+                          },
                           child: Text('Upload Banner'),
                         )
                       : SizedBox();
