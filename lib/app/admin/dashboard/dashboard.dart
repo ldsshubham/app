@@ -46,11 +46,13 @@ class AdminDashboard extends StatelessWidget {
                   widget: AdminOrders(),
                 );
               }),
-              DashboardBox(
-                title: "Vendors",
-                value: "35",
-                widget: AdminVendor(),
-              ),
+              Obx(() {
+                return DashboardBox(
+                  title: "Vendors",
+                  value: "${_dashboardController.totalVendors}",
+                  widget: AdminVendor(),
+                );
+              }),
               DashboardBox(
                 title: "Revenue",
                 value: "₹50,000",

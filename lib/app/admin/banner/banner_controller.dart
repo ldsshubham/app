@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:app/app/admin/banner/banner_model.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -13,6 +15,9 @@ class BannerController extends GetxController {
   final titleController = ''.obs;
   final selectedImage = Rx<File?>(null);
   final ImagePicker picker = ImagePicker();
+  final pageController = PageController();
+  final currentPage = 0.obs;
+  Timer? autoScrollTimer;
 
   @override
   void onInit() {
@@ -28,6 +33,27 @@ class BannerController extends GetxController {
                 .toList(),
           ),
     );
+    _autoScroll();
+  }
+
+  @override
+  void onClose() {
+    autoScrollTimer?.cancel();
+    pageController.dispose();
+    super.onClose();
+  }
+
+  void _autoScroll() {
+    autoScrollTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (uploadBanners.isEmpty || !pageController.hasClients) return;
+      final nextPage = (currentPage.value + 1) % uploadBanners.length;
+      pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      currentPage.value = nextPage;
+    });
   }
 
   Future<void> pickBannerImage() async {

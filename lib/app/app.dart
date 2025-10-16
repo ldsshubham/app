@@ -1,4 +1,4 @@
-import 'package:app/app/admin/auth/admin_login.dart';
+import 'package:app/app/customer/home.dart';
 import 'package:app/constants/strings.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         navigatorObservers: <NavigatorObserver>[observer],
-        home: AdminLogin(),
+        home: HomePage(),
         title: AppString.appName,
       ),
     );
