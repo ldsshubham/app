@@ -22,7 +22,7 @@ class Banners extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: const Text(
-            "No banners available",
+            "Loadiung Banners...",
             style: TextStyle(color: Colors.black54),
           ),
         );
@@ -34,7 +34,7 @@ class Banners extends StatelessWidget {
             height: 200,
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.gray,
+              color: AppColors.gray.withAlpha(100),
               borderRadius: BorderRadius.circular(16),
             ),
             clipBehavior: Clip.antiAlias,

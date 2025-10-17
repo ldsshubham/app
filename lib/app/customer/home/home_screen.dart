@@ -1,4 +1,6 @@
-import 'package:app/app/customer/widgets/banner_component.dart';
+import 'package:app/app/customer/dashboard/banner_component.dart';
+import 'package:app/app/customer/dashboard/product_components.dart';
+import 'package:app/app/customer/dashboard/vendor_component.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +13,9 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(children: [Banners()]),
+          child: Column(
+            children: [Banners(), ProductComponents(), VendorComponent()],
+          ),
         ),
       ),
     );
