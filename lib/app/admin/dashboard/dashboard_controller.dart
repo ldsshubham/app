@@ -37,7 +37,7 @@ class DashboardController extends GetxController {
       ) {
         totalBanner.value = snapshot.docs.length;
       });
-      _vendorsSub = _firestore.collection('vendor').snapshots().listen((
+      _vendorsSub = _firestore.collection('businesses').snapshots().listen((
         snapshot,
       ) {
         totalVendors.value = snapshot.docs.length;

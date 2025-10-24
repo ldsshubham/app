@@ -1,6 +1,6 @@
-import 'package:app/app/admin/auth/admin_login.dart';
 import 'package:app/app/admin/utils/vendor_card.dart';
 import 'package:app/app/admin/vendors/admin_add_vendor.dart';
+import 'package:app/app/admin/vendors/admin_vendor_controller.dart';
 import 'package:app/app/admin/vendors/admin_vendor_details.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,8 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AdminVendor extends StatelessWidget {
-  const AdminVendor({super.key});
+  AdminVendor({super.key});
+  final AdminVendorController controller = Get.put(AdminVendorController());
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +18,32 @@ class AdminVendor extends StatelessWidget {
         appBar: AppBar(title: Text('Vendors'), centerTitle: true),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 230,
-            ),
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return VendorCard(
-                imageUrl:
-                    'https://www.venkateshwaragroup.in/vgiblog/wp-content/uploads/2023/04/Scope-for-Agriculture.jpg',
-                title: "Vendor Name",
-                category: "cat",
-                pincode: '10',
-                onTap: () {
-                  Get.to(() => AdminVendorDetails());
-                },
-                onDelete: () {},
-              );
-            },
-          ),
+          child: Obx(() {
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 230,
+              ),
+              itemCount: controller.vendors.length,
+              itemBuilder: (context, index) {
+                final vendor = controller.vendors[index];
+                return VendorCard(
+                  imageUrl:
+                      vendor['profileImgUrl'] ??
+                      "https://i0.wp.com/kudos.fastcompany.com/wp-content/uploads/2025/04/placeholder.png?ssl=1",
+                  title: vendor['businessName'],
+                  category: vendor['address'],
+                  pincode: vendor['pincode'],
+                  onTap: () {
+                    Get.to(() => AdminVendorDetails(vendorId: vendor['id']));
+                  },
+                  onDelete: () {},
+                );
+              },
+            );
+          }),
         ),
         floatingActionButton: Container(
           padding: EdgeInsets.all(4),

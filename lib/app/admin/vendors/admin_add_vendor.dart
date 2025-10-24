@@ -1,13 +1,13 @@
-import 'package:app/app/admin/vendors/admin_vendor_controller.dart';
+import 'package:app/app/admin/vendors/admin_add_vendor_controller.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:toastification/toastification.dart';
 
 class BusinessRegistrationScreen extends StatelessWidget {
   final BusinessRegistrationController controller = Get.put(
     BusinessRegistrationController(),
   );
+
   final _formKey = GlobalKey<FormState>();
 
   BusinessRegistrationScreen({super.key});
@@ -22,7 +22,9 @@ class BusinessRegistrationScreen extends StatelessWidget {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 🔹 Profile Image
                 Obx(() {
                   return InkWell(
                     onTap: controller.pickProfileImg,
@@ -51,37 +53,47 @@ class BusinessRegistrationScreen extends StatelessWidget {
                     ),
                   );
                 }),
-                SizedBox(height: 8),
-                OutlinedButton(
-                  onPressed: () {
-                    controller.uploadPicture(
-                      controller.selectedProfile.value!,
-                      type: "profile",
-                    );
-                  },
-                  child: Text('Upload Profile Picture'),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      if (controller.selectedProfile.value != null) {
+                        controller.uploadPicture(
+                          controller.selectedProfile.value!,
+                          type: "profile",
+                        );
+                      } else {
+                        Get.snackbar("Error", "Please select an image first");
+                      }
+                    },
+                    child: const Text('Upload Profile Picture'),
+                  ),
                 ),
-                SizedBox(height: 8),
+
+                const SizedBox(height: 12),
+
+                // 🔹 Vendor Info Fields
                 TextFormField(
                   controller: controller.vendorName,
                   decoration: const InputDecoration(labelText: "Vendor Name"),
                   validator: (value) =>
                       value!.isEmpty ? "Enter vendor name" : null,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: controller.businessName,
                   decoration: const InputDecoration(labelText: "Business Name"),
                   validator: (value) =>
                       value!.isEmpty ? "Enter business name" : null,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: controller.address,
                   decoration: const InputDecoration(labelText: "Address"),
                   validator: (value) => value!.isEmpty ? "Enter address" : null,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: controller.gstPanAadhaar,
                   decoration: const InputDecoration(
@@ -90,20 +102,21 @@ class BusinessRegistrationScreen extends StatelessWidget {
                   validator: (value) =>
                       value!.isEmpty ? "Enter ID details" : null,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextFormField(
                   controller: controller.pincode,
                   decoration: const InputDecoration(labelText: "Pincode"),
                   keyboardType: TextInputType.number,
                   validator: (value) => value!.isEmpty ? "Enter pincode" : null,
                 ),
+
                 const SizedBox(height: 16),
 
-                /// Plan selector
+                // 🔹 Plan Selector
                 Obx(
                   () => DropdownButtonFormField<String>(
                     decoration: const InputDecoration(labelText: "Select Plan"),
-                    initialValue: controller.selectedPlan.value,
+                    value: controller.selectedPlan.value,
                     items: const [
                       DropdownMenuItem(value: "Free", child: Text("Free")),
                       DropdownMenuItem(
@@ -117,9 +130,10 @@ class BusinessRegistrationScreen extends StatelessWidget {
                     },
                   ),
                 ),
+
                 const SizedBox(height: 16),
 
-                /// Dynamic mobile number fields
+                // 🔹 Mobile Numbers
                 TextFormField(
                   controller: controller.mobile1,
                   decoration: const InputDecoration(
@@ -129,7 +143,7 @@ class BusinessRegistrationScreen extends StatelessWidget {
                   validator: (value) =>
                       value!.isEmpty ? "Enter mobile number" : null,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Obx(
                   () => controller.selectedPlan.value != "Free"
                       ? TextFormField(
@@ -144,53 +158,66 @@ class BusinessRegistrationScreen extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                /// Banner upload (only for Max)
+                // 🔹 Banner Upload (for Max plan)
                 Obx(
                   () => controller.selectedPlan.value == "Max"
-                      ? InkWell(
-                          onTap: controller.pickBannerImage,
-                          child: Container(
-                            height: 180,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: AppColors.primaryColor,
-                                width: 1,
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: controller.pickBannerImage,
+                              child: Container(
+                                height: 180,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: AppColors.primaryColor,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: controller.selectedBanner.value != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.file(
+                                          controller.selectedBanner.value!,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                        ),
+                                      )
+                                    : const Center(
+                                        child: Text("Tap to upload banner"),
+                                      ),
                               ),
                             ),
-                            child: controller.selectedBanner.value != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.file(
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  if (controller.selectedBanner.value != null) {
+                                    controller.uploadPicture(
                                       controller.selectedBanner.value!,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                    ),
-                                  )
-                                : const Center(
-                                    child: Text("Tap to upload banner"),
-                                  ),
-                          ),
+                                      type: "banner",
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      "Error",
+                                      "Please select banner",
+                                    );
+                                  }
+                                },
+                                child: const Text('Upload Banner'),
+                              ),
+                            ),
+                          ],
                         )
                       : const SizedBox(),
                 ),
-                SizedBox(height: 8),
-                Obx(() {
-                  return controller.selectedPlan.value == "Max"
-                      ? OutlinedButton(
-                          onPressed: () {
-                            controller.uploadPicture(
-                              controller.selectedBanner.value!,
-                              type: "banner",
-                            );
-                          },
-                          child: Text('Upload Banner'),
-                        )
-                      : SizedBox();
-                }),
+
                 const SizedBox(height: 24),
 
+                // 🔹 Submit Button
                 Obx(
                   () => SizedBox(
                     width: double.infinity,
@@ -202,6 +229,10 @@ class BusinessRegistrationScreen extends StatelessWidget {
                                 await controller.submitBusiness();
                               }
                             },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
                       child: controller.isLoading.value
                           ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(
